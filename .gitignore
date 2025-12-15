@@ -1,0 +1,6 @@
+docs/*
+examples/*
+excludes/*
+src/*
+tests/*
+config.sh
