@@ -1,0 +1,7 @@
+
+*.pdf
+*.out
+/LICENSE
+/README.md
+/main.c
+*.dSYM
