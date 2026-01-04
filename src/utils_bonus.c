@@ -1,23 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/27 19:42:30 by ykonka            #+#    #+#             */
-/*   Updated: 2025/12/29 16:20:47 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/01/03 20:04:37 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "pipex.h"
+# include "pipex_bonus.h"
 
-int open_file(const char *file){
+int open_file_r(const char *file){
     int fd;
 
-    fd = open(file, O_CREAT | O_RDWR | O_TRUNC, 0700);
+    fd = open(file, O_CREAT | O_RDONLY, 0700);
     if (fd == -1){
-        perror("open_file");
+        perror("open_file_r");
+        return -1;
+    }
+    return fd;
+}
+
+int open_file_w(const char *file){
+    int fd;
+
+    fd = open(file, O_CREAT | O_WRONLY | O_TRUNC, 0700);
+    if (fd == -1){
+        perror("open_file_w");
+        return -1;
+    }
+    return fd;
+}
+
+int open_file_a(const char *file){
+    int fd;
+
+    fd = open(file, O_CREAT | O_APPEND | O_WRONLY, 0700);
+    if (fd == -1){
+        perror("uitls_bonus/open_file_a");
         return -1;
     }
     return fd;
@@ -79,20 +101,6 @@ char *get_exe_path(const char *env_path, const char *cmd){
     free((char*)env_path);  // usage is done
     
     while (*temp_paths_arr){
-        // path = ft_strjoin(*temp_paths_arr, "/");
-        // if (path == NULL){
-        //     free_strings_arr(paths_arr);
-        //     paths_arr = NULL;
-        //     // perror("1st strjoin failed");
-        //     return NULL;
-        // }
-        // path = ft_strjoin(path, cmd);
-        // if (path == NULL){
-        //     free_strings_arr(paths_arr);
-        //     paths_arr = NULL;
-        //     // perror("2nd strjoin failed");
-        //     return NULL;
-        // }
         path = join_env_path_to_cmd(*temp_paths_arr, cmd, paths_arr);
         if (path==NULL){
             paths_arr = NULL;
@@ -106,8 +114,7 @@ char *get_exe_path(const char *env_path, const char *cmd){
         temp_paths_arr++;   
     }
     free_strings_arr(paths_arr);
-    paths_arr = NULL;
-    // perror("no path found");
+    paths_arr = NULL; // perror("no path found");
     return NULL;
 }
 

@@ -1,6 +1,8 @@
 # NAME = pipex.a
-NAME = pipex.out
-CFLAGS = -Wall -Wextra -Werror -g
+# NAME = pipex.out
+NAME = pipex_asan.out
+# CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g
 
 SCRS = utils.c pipex.c
 OBJS = $(SCRS:.c=.o)  # creates .o file names as .c, does not compile
@@ -17,7 +19,7 @@ all: $(NAME)
 	@cc $(CFLAGS) -c $< -o $@
 
 $(LIBFT):
-	@make -C $(LIBFT_DIR)
+	@make -C $(LIBFT_DIR) bonus
 
 $(PRINTF):
 	@make -C $(PRINTF_DIR)
@@ -51,5 +53,11 @@ re: fclean all
 
 run:
 	@chmod 755 $(NAME)
-	@./pipex file1.txt "ls -la" "wc -w" file2.txt
+	@./pipex.out file1.txt "ls -la" "wc -w" file2.txt
 	@cat file2.txt
+
+
+TEXT_FILES = file1.txt file2.txt outfile infile
+clean_text_files:
+	@rm -f $(TEXT_FILES)
+	

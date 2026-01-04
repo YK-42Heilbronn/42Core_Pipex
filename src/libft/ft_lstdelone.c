@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstdelone.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykonka <ykonka@student.42.fr>              #+#  +:+       +#+        */
+/*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-04-27 15:10:41 by ykonka            #+#    #+#             */
-/*   Updated: 2025-04-27 15:10:41 by ykonka           ###   ########.fr       */
+/*   Created: 2025/04/27 15:10:41 by ykonka            #+#    #+#             */
+/*   Updated: 2026/01/03 15:08:29 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,5 @@ void	ft_lstdelone(t_list *lst, void (*del)(void *))
 	{
 		del(lst->content);
 		free(lst);
-		lst = NULL;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstclear.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykonka <ykonka@student.42.fr>              #+#  +:+       +#+        */
+/*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-05-01 09:37:27 by ykonka            #+#    #+#             */
-/*   Updated: 2025-05-01 09:37:27 by ykonka           ###   ########.fr       */
+/*   Created: 2025/05/01 09:37:27 by ykonka            #+#    #+#             */
+/*   Updated: 2026/01/03 15:09:05 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,3 +23,49 @@ void	ft_lstclear(t_list **lst, void (*del)(void *))
 		*lst = temp;
 	}
 }
+
+// void int_del(void *content) {
+//     (void)content;  // Do nothing - not malloc'd
+// }
+
+// #include "stdint.h"
+// #include "stdio.h"
+
+// int main(){
+// 	t_list *head;
+// 	t_list *links;
+// 	int i;
+// 	// int j;
+// 	// int k;
+// 	// int l;
+
+// 	i = 21;
+// 	head = ft_lstnew((void*)(intptr_t)i);
+// 	i = 20;
+// 	links = ft_lstnew((void*)(intptr_t)i);
+// 	ft_lstadd_back(&head, links);
+// 	i = 19;
+// 	links = ft_lstnew((void*)(intptr_t)i);
+// 	ft_lstadd_back(&head, links);
+// 	i = 18;
+// 	links = ft_lstnew((void*)(intptr_t)i);
+// 	ft_lstadd_back(&head, links);
+// 	// printf("%d ", (int)(intptr_t)head->content);
+// 	t_list *next;
+// 	next = head;
+// 	while(next){
+// 		printf("%d ", (int)(intptr_t)next->content);
+// 		next = next->next;
+// 	}
+// 	ft_lstclear(&head, int_del);
+// 	next = head;
+// 	if (next==NULL)
+// 		printf("NULL\n");
+// 	else
+// 		printf("not NULL\n");
+// 	while(next){
+// 		printf("%d ", (int)(intptr_t)next->content);
+// 		next = next->next;
+// 	}
+// }
+
