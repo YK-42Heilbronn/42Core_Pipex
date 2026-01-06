@@ -1,27 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   get_exe_path_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/27 19:42:30 by ykonka            #+#    #+#             */
-/*   Updated: 2025/12/29 16:30:48 by ykonka           ###   ########.fr       */
+/*   Created: 2026/01/04 20:01:18 by ykonka            #+#    #+#             */
+/*   Updated: 2026/01/06 17:01:39 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "pipex.h"
-
-int open_file(const char *file){
-    int fd;
-
-    fd = open(file, O_CREAT | O_RDWR | O_TRUNC, 0700);
-    if (fd == -1){
-        perror("open_file");
-        return -1;
-    }
-    return fd;
-}
+# include "pipex_bonus.h"
 
 char *get_env_path(){
     char **env;
@@ -46,7 +35,7 @@ char *get_env_path(){
     return NULL;
 }
 
-char *join_env_path_to_cmd(char *temp_paths_arr, const char *cmd, char **paths_arr){
+static char *join_env_path_to_cmd(char *temp_paths_arr, const char *cmd, char **paths_arr){
     char *path;
     
     path = ft_strjoin(temp_paths_arr, "/");
@@ -80,20 +69,18 @@ char *get_exe_path(const char *env_path, const char *cmd){
     
     while (*temp_paths_arr){
         path = join_env_path_to_cmd(*temp_paths_arr, cmd, paths_arr);
-        if (path==NULL){
-            paths_arr = NULL;
-            return NULL;
-        }
-        if (access(path, X_OK) == 0){
-            free_strings_arr(paths_arr);
-            paths_arr = NULL;
-            return path;
-        } 
+        if (path==NULL)
+            return (paths_arr = NULL, NULL);
+
+        if (access(path, X_OK) == 0)
+            return (free_strings_arr(paths_arr), paths_arr = NULL, path);
+        // else{
+        //     perror("cmd is invalid");
+        //     exit(1);
+        // } 
         temp_paths_arr++;   
     }
-    free_strings_arr(paths_arr);
-    paths_arr = NULL; // perror("no path found");
-    return NULL;
+    return (free_strings_arr(paths_arr), paths_arr = NULL, NULL);
 }
 
 void free_strings_arr(char **str_arr){

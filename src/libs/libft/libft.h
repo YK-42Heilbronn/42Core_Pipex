@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 08:50:10 by ykonka            #+#    #+#             */
-/*   Updated: 2025/11/25 19:39:44 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/01/06 13:13:17 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	ft_striteri(char *s, void (*f)(unsigned int, char*));
 size_t	ft_strlen(const char *str);
 size_t	ft_strlcpy(char *dest, const char *src, size_t size);
 size_t	ft_strlcat(char *dest, const char *src, size_t size);
+// ----------------------- Bonus -----------------------
 typedef struct s_list
 {
 	void	*content;
