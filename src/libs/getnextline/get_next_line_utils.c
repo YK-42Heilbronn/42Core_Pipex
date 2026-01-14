@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykonka <ykonka@student.42.fr>              #+#  +:+       +#+        */
+/*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-06-05 18:00:30 by ykonka            #+#    #+#             */
-/*   Updated: 2025-06-05 18:00:30 by ykonka           ###   ########.fr       */
+/*   Created: 2025/06/05 18:00:30 by ykonka            #+#    #+#             */
+/*   Updated: 2026/01/07 16:34:55 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,12 @@ size_t	ft_strlen(const char *str)
 
 char	*ft_strchr(const char *s, int c)
 {
-	if (s)
+	printf("  strchr\n");
+	if (s != NULL)
 	{
 		while (*s)
 		{
+			printf("    strchr while\n");
 			if (*s == (char)c)
 				return ((char *)s);
 			s++;

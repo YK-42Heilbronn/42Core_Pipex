@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 17:43:05 by ykonka            #+#    #+#             */
-/*   Updated: 2026/01/06 17:07:19 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/01/07 15:41:20 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ void multi_cmds(int argc, char *argv[]){
             perror("child1 failed");
             exit(1);   
         }
+        // if (child>0)
         ft_lstadd_back(&children, ft_lstnew((void*)(intptr_t)child));
         if (child==0){
             if (ind == 2){                                               // cmd_1  // file1
@@ -120,17 +121,17 @@ void multi_cmds(int argc, char *argv[]){
         ind++;
     }
     
-    // // close(STDIN_FILENO);
-    // // close(STDOUT_FILENO);
+    // close(STDIN_FILENO);
+    // close(STDOUT_FILENO);
     
-    // t_list *next;
-    // next = children;
-    // while(next){
-    //     waitpid((pid_t)(intptr_t)next->content, NULL, 0);
-    //     next = next->next;
-    // }
-    // ft_lstclear(&children, child_del);
-    end_of_parent_proc(&children);
+    t_list *next;
+    next = children;
+    while(next){
+        waitpid((pid_t)(intptr_t)next->content, NULL, 0);
+        next = next->next;
+    }
+    ft_lstclear(&children, child_del);
+    // end_of_parent_proc(&children);
     exit(0);  // exit(EXIT_SUCCESS);
 }
 
@@ -190,17 +191,17 @@ void here_doc(int argc, char *argv[]){
         ind++;
     }
 
-    // // close(pipefd[0]);
-    // // close(pipefd[1]);
+    // close(pipefd[0]);
+    // close(pipefd[1]);
     
-    // t_list *next;
-    // next = children;
-    // while(next){
-    //     waitpid((pid_t)(intptr_t)next->content, NULL, 0);
-    //     next = next->next;
-    // }
-    // ft_lstclear(&children, child_del);
-    end_of_parent_proc(&children);
+    t_list *next;
+    next = children;
+    while(next){
+        waitpid((pid_t)(intptr_t)next->content, NULL, 0);
+        next = next->next;
+    }
+    ft_lstclear(&children, child_del);
+    // end_of_parent_proc(&children);
     exit(0);  // exit(EXIT_SUCCESS);
 }
 
