@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/27 19:42:30 by ykonka            #+#    #+#             */
-/*   Updated: 2026/01/14 14:27:54 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/01/14 15:41:42 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ int is_file_exist(const char *path){
     return 0; // not exist
 }
 
+// @Child-Process-Method
 void is_file_valid(const char *in_or_out, int infile){
-    
     // infile
     if (infile){
         if (!is_file_exist(in_or_out)){
@@ -66,8 +66,7 @@ void is_file_valid(const char *in_or_out, int infile){
                 exit(EX_ITFNR);
             }
         }
-    }else{
-        // outfile
+    }else{// outfile
         if (is_file_exist(in_or_out)){
             if (access(in_or_out, W_OK) != 0){
                 errno = EACCES;
