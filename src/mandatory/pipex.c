@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 14:49:16 by ykonka            #+#    #+#             */
-/*   Updated: 2026/01/14 14:29:37 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/04 15:50:06 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void pipex(const char *file1, const char *cmd1, const char *cmd2, const char *fi
         // close(f1_fd);
         // close(f2_fd);
         // perror("pipe failed");
-        print_errors("Pipex: ", "pipe create failed", 1);
+        print_errors("Pipex: ", "", 1);
         exit(EX_PIPEFAILURE);  // exit(EXIT_FAILURE)
     }
     
@@ -201,12 +201,12 @@ void pipex(const char *file1, const char *cmd1, const char *cmd2, const char *fi
     //     // print_errors("Pipex: ", cleaned_cmd, 0);
     //     free(cleaned_cmd);
     //     // exit(WEXITSTATUS(c1status));
-    // } else if (WIFSIGNALED(c1status)){
+    // } else 
+    // if (WIFSIGNALED(c1status)){
     //     cleaned_cmd = ft_strtrim(cmd1, " \t\v\n\r\f");
-    //     print_errors("Pipex: ", cleaned_cmd, 0);
+    //     print_errors("Pipex: is killed: ", ft_strjoin(ft_itoa(WTERMSIG(c1status)), cleaned_cmd), 0);
     //     free(cleaned_cmd);
     // }
-    
     if (WIFEXITED(c2status)){
         // cleaned_cmd = ft_strtrim(cmd2, " \t\v\n\r\f");
         // // print_errors("Pipex: ", cleaned_cmd, 1);
@@ -219,7 +219,7 @@ void pipex(const char *file1, const char *cmd1, const char *cmd2, const char *fi
         // cleaned_cmd = ft_strtrim(cmd2, " \t\v\n\r\f");
         // print_errors("Pipex c2 killed: ", cleaned_cmd, 1);
         // free(cleaned_cmd);
-        exit(WTERMSIG(c2status));
+        exit(128+WTERMSIG(c2status));
     }else
         exit(WSTOPSIG(c2status));
     // close(pipefd[0]);
@@ -245,8 +245,8 @@ pid_t create_child_process(int pipefd[], const char *cmd){
         // clean_fds(pipefd);
         // perror("child1 failed");
         close(pipefd[0]), close(pipefd[1]);
-        print_errors("Pipex: fork failed: ", (char*)cmd, 1);
-        exit(EX_FORKFAILURE);   
+        print_errors("Pipex: ", (char*)cmd, 1);
+        exit(EX_FORKFAILURE);
     }
     return child;
 }
@@ -262,7 +262,7 @@ pid_t create_child_process(int pipefd[], const char *cmd){
 //     return(cmd_split);
 // }
 
-/* 
+/*
 f1_fd:
     if fails: exit()
 
@@ -292,13 +292,13 @@ void first_child(const char *cmd, const char *file1, int pipefd[]){
     cmd_split = ft_split(cmd, ' ');
     if (cmd_split == NULL){
         // perror("cmd1_split failed");
-        print_errors("Pipex: split failed", cmd_split[0], 0);
+        print_errors("Pipex: ", cmd_split[0], 0);
         exit(EX_CHDPROCFAILURE);  // exit(EXIT_FAILURE);
     }
     // exe_path = get_exe_path((const char*)get_env_path(), cmd_split[0]);
     // cmd_split = cmd_split_arr(cmd);
     
-    exe_path = executable_path(cmd_split[0]);
+    exe_path = executable_path(cmd_split);
     
     // @ALREADY HANDLED IN get_exe_path
     // if (exe_path == NULL){
@@ -307,23 +307,24 @@ void first_child(const char *cmd, const char *file1, int pipefd[]){
     // }
 
     if(dup2(f1_fd, STDIN_FILENO)==-1){       // setting fd=0 to f1_fd open_file_discription instead terminal/keyboard
-        print_errors("Pipex: dup2 failed: ", cmd_split[0], 1);
+        print_errors("Pipex: ", cmd_split[0], 1);
         exit(EX_FDFAILURE);
-    }    
+    }
     if(dup2(pipefd[1], STDOUT_FILENO)==-1){ // setting fd=1 to pipe write_end struct_file instead terminal/monitor
-        print_errors("Pipex: dup2 failed: ", cmd_split[0], 1);
+        print_errors("Pipex: ", cmd_split[0], 1);
         exit(EX_FDFAILURE);
     }
     close(f1_fd); // delete original fd
     close(pipefd[1]);  // Write End is successfully copied, delete original fd
     
     execve(exe_path, cmd_split, __environ);
-    print_errors("Pipex: execve: ", cmd_split[0], 1);
+    print_errors("Pipex: ", cmd_split[0], 1);
     free_strings_arr(cmd_split), free(exe_path);
+    exit(EX_APPFAILURE);
     // }
 }
 
-/* 
+/*
 f2_fd:
     if fails: exit()
 
@@ -347,7 +348,7 @@ void last_child(const char *cmd, const char *file2, int pipefd[]){
     
     cmd_split = ft_split(cmd, ' ');
     if (cmd_split == NULL){
-        print_errors("Pipex: split failed", (char*)cmd, 0);
+        print_errors("Pipex: ", (char*)cmd, 0);
         exit(EX_CHDPROCFAILURE);  // exit(EXIT_FAILURE);
     }
     // exe_path = get_exe_path((const char*)get_env_path(), cmd_split[0]);
@@ -355,7 +356,7 @@ void last_child(const char *cmd, const char *file2, int pipefd[]){
     //     perror("cmd2 exe_path NULL");
     //     exit(1);  // exit(EXIT_FAILURE);
     // }
-    exe_path = executable_path(cmd_split[0]);
+    exe_path = executable_path(cmd_split);
   
     dup2(pipefd[0], STDIN_FILENO);   // setting fd=0 to pipe read_end struct_file instead f1_fd file
     // dup2(pipefd[1], STDOUT_FILENO);  // setting fd=1 to pipe write_end struct_file instead terminal/monitor
@@ -365,9 +366,10 @@ void last_child(const char *cmd, const char *file2, int pipefd[]){
     close(pipefd[0]);  // Read End is successfully copied, delete it
     
     execve(exe_path, cmd_split, __environ);
-    print_errors("Pipex: execve: ", cmd_split[0], 1);
+    print_errors("Pipex: ", cmd_split[0], 1);
     free_strings_arr(cmd_split);
     free(exe_path);
+    exit(EX_APPFAILURE);
     // }
 }
 

@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/27 19:42:30 by ykonka            #+#    #+#             */
-/*   Updated: 2026/01/14 15:41:42 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/04 12:39:05 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void print_errors(char *pre_text, char *msg_or_cmd, int _perror){
     char *print_str;
-    
+
     if (_perror){
         // errno = EACCES;
         print_str = ft_strjoin(pre_text, msg_or_cmd);
@@ -24,7 +24,7 @@ void print_errors(char *pre_text, char *msg_or_cmd, int _perror){
         // pre_text = "Pipex: command not found: ";
         write(2, pre_text, ft_strlen(pre_text));
         write(2, msg_or_cmd, ft_strlen(msg_or_cmd));
-        write(2, "\n", 1);   
+        write(2, "\n", 1);
     }
 }
 
@@ -36,7 +36,7 @@ int open_file(const char *file, int r_or_w){
         fd = open(file, O_RDONLY);
     else  // 0 = write
         fd = open(file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-        
+
     if (fd == -1){  // here errno=is_set_by open() system call function
         print_errors("Pipex: ", (char*)file, 1);
         exit (EX_GENFAILURE);
@@ -53,8 +53,7 @@ int is_file_exist(const char *path){
 
 // @Child-Process-Method
 void is_file_valid(const char *in_or_out, int infile){
-    // infile
-    if (infile){
+    if (infile){  // infile
         if (!is_file_exist(in_or_out)){
             errno = ENOENT;
             print_errors("Pipex: ", (char*)in_or_out, 1);
@@ -75,7 +74,7 @@ void is_file_valid(const char *in_or_out, int infile){
                 exit(EX_OTFNW);
             }
         } // if it does not exist, will be created and given write access
-        // return (EX_SUCCESS);   
+        // return (EX_SUCCESS);
     }
 }
 

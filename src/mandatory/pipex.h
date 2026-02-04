@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 10:34:38 by ykonka            #+#    #+#             */
-/*   Updated: 2026/01/14 14:28:29 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/04 12:36:01 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,7 @@ void last_child(const char *cmd, const char *file2, int pipefd[]);
 pid_t create_child_process(int pipefd[], const char *cmd);
 
 // get_exe_path.c
-char *executable_path(char *cmd);
-char *get_env_path();
-char *get_exe_path(const char *env_path, const char *cmd);
+char *executable_path(char **cmd_split);
 
 // utils.c
 void print_errors(char *pre_text, char *msg_or_cmd, int _perror);
@@ -74,5 +72,8 @@ int open_file(const char *file, int r_or_w);
 int is_file_exist(const char *path);
 void free_strings_arr(char **str_arr);
 void is_file_valid(const char *in_or_out, int infile);
+
+// ifs_split.c
+char	**ifs_split(char const *s);
 
 # endif

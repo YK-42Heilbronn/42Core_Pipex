@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ykonka <ykonka@student.42.fr>              #+#  +:+       +#+        */
+/*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-03-22 08:57:03 by ykonka            #+#    #+#             */
-/*   Updated: 2025-03-22 08:57:03 by ykonka           ###   ########.fr       */
+/*   Created: 2025/03/22 08:57:03 by ykonka            #+#    #+#             */
+/*   Updated: 2026/01/24 13:31:48 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 
 	if (!s)
 		return (NULL);
+
 	if (len > ft_strlen(s) - start)
 		len = ft_strlen(s) - start;
 	ind = 0;

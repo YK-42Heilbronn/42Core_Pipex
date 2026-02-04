@@ -6,13 +6,13 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 18:00:30 by ykonka            #+#    #+#             */
-/*   Updated: 2026/01/07 16:34:55 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/01/16 18:24:33 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *str)
+size_t	md_strlen(const char *str)
 {
 	size_t	count;
 
@@ -25,19 +25,17 @@ size_t	ft_strlen(const char *str)
 	return (count);
 }
 
-char	*ft_strchr(const char *s, int c)
+char	*md_strchr(const char *s, int c)
 {
-	printf("  strchr\n");
 	if (s != NULL)
 	{
 		while (*s)
 		{
-			printf("    strchr while\n");
 			if (*s == (char)c)
 				return ((char *)s);
 			s++;
 		}
-		if (*s == (char)c)
+		if ((char)c == '\0')
 		{
 			return ((char *)s);
 		}
@@ -45,16 +43,16 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*md_strjoin(char const *s1, char const *s2)
 {
 	char	*concat_str;
 	char	*temp;
 
 	if (!s1)
-		return (ft_strdup(s2));
+		return (md_strdup(s2));
 	if (!s2)
-		return (ft_strdup(s1));
-	concat_str = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2)
+		return (md_strdup(s1));
+	concat_str = (char *)malloc(sizeof(char) * (md_strlen(s1) + md_strlen(s2)
 				+ 1));
 	if (concat_str == NULL)
 		return (NULL);
@@ -73,17 +71,17 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (concat_str);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*md_substr(char const *s, unsigned int start, size_t len)
 {
 	char	*sub_str;
 	int		ind;
 
 	if (!s)
 		return (NULL);
-	if (len > ft_strlen(s) - start)
-		len = ft_strlen(s) - start;
+	if (len > md_strlen(s) - start)
+		len = md_strlen(s) - start;
 	ind = 0;
-	if (start < ft_strlen(s))
+	if (start < md_strlen(s))
 	{
 		sub_str = malloc((len + 1) * sizeof(char));
 		if (!sub_str)
@@ -101,14 +99,14 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (sub_str);
 }
 
-char	*ft_strdup(const char *s1)
+char	*md_strdup(const char *s1)
 {
 	char	*s1_cpy;
 	char	*tmp;
 
 	if (!s1)
 		return (NULL);
-	s1_cpy = malloc(sizeof(char) * (ft_strlen(s1) + 1));
+	s1_cpy = malloc(sizeof(char) * (md_strlen(s1) + 1));
 	if (s1_cpy != NULL)
 	{
 		tmp = s1_cpy;

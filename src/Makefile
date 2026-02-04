@@ -16,7 +16,7 @@ BONUS_OBJS_DIR = $(OBJS_DIR)/$(BONUS_DIR)
 # ------- Mandatory -------
 SRC_HEADER_FILES = pipex.h
 SRC_HEADER = $(MANDATORY_DIR)/$(SRC_HEADER_FILES)
-SRC_FILES = utils.c pipex.c get_exe_path.c
+SRC_FILES = utils.c get_exe_path.c pipex.c
 SRCS = $(addprefix $(MANDATORY_DIR)/,$(SRC_FILES))
 OBJ_FILES = $(SRCS:.c=.o)  # creates .o file names as .c, does not compile
 OBJS = $(addprefix $(OBJS_DIR)/,$(OBJ_FILES))
@@ -24,8 +24,8 @@ OBJS = $(addprefix $(OBJS_DIR)/,$(OBJ_FILES))
 # ------- Bonus -------
 BONUS_HEADER_FILES = pipex_bonus.h
 BONUS_HEADER = $(BONUS_DIR)/$(BONUS_HEADER_FILES)
-BONUS_SRC_FILES = utils_bonus.c file_open_bonus.c get_exe_path_bonus.c \
-				  child_processes_bonus.c pipex_bonus.c 
+BONUS_SRC_FILES = utils_bonus.c file_utils_bonus.c get_exe_path_bonus.c \
+				  child_processes_bonus.c pipex_bonus.c
 BONUS_SRCS = $(addprefix $(BONUS_DIR)/,$(BONUS_SRC_FILES))
 BONUS_OBJ_FILES = $(BONUS_SRCS:.c=.o)
 BONUS_OBJS = $(addprefix $(OBJS_DIR)/,$(BONUS_OBJ_FILES))

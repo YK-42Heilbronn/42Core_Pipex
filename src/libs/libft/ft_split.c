@@ -6,135 +6,105 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 09:54:53 by ykonka            #+#    #+#             */
-/*   Updated: 2025/11/20 14:50:26 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/01/31 15:52:18 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static size_t	get_c_count(char const *s, char c)
-{
-	size_t	count;
-	int		ind;
+int get_delimiter_count(const char *str, char c){
+    int count;
+    int ind;
+    int flag;
 
-	count = 0;
-	ind = 0;
-	while (s[ind])
-	{
-		if ((s[ind] == c) & (s[ind - 1] != s[ind]))
-			count++;
-		ind++;
-	}
-	return (count);
+    count = 0;
+    ind = 0;
+    flag = 1;
+    while(str[ind]){
+        if (str[ind]!=c && flag){
+            count++;
+            flag = 0;
+        }else{
+            if (str[ind]==c)
+                flag = 1;
+        }
+        ind++;
+    }
+    return count;
 }
 
-static char	*clean_and_remove_duplicates(char const *s, char c)
-{
-	char	*cleaned_s;
-	char	*cleaned_s_temp;
-	char	*trimmed_s;
-	int		ind;
+char* delimiter_string(char c){
+    char *char_str;
 
-	trimmed_s = ft_strtrim(s, &c);
-	ind = 0;
-	if (!trimmed_s)
-	{
-		return (NULL);
-	}
-	if (trimmed_s[ind] == '\0')
-	{
-		free(trimmed_s);
-		return (NULL);
-	}
-	cleaned_s = malloc(sizeof(char) * (ft_strlen(trimmed_s) + 1));
-	if (!cleaned_s)
-	{
-		free(trimmed_s);
-		return (NULL);
-	}
-	cleaned_s_temp = cleaned_s;
-	*cleaned_s++ = trimmed_s[ind++];
-	while (trimmed_s[ind])
-	{
-		if (trimmed_s[ind - 1] == c && trimmed_s[ind] == c)
-		{
-			ind++;
-			continue ;
-		}
-		*cleaned_s++ = trimmed_s[ind++];
-	}
-	*cleaned_s = '\0';
-	return (cleaned_s_temp);
+    char_str = (char*)malloc(sizeof(char)*2);
+    if (!char_str)
+        return NULL;
+    char_str[0] = c;
+    char_str[1] = '\0';
+
+    return char_str;
 }
 
-void	*free_str_arr(char **str_arr)
-{
-	while (*str_arr != NULL)
-	{
-		free(*str_arr);
-		*str_arr = NULL;
-		str_arr++;
-	}
-	// free(str_arr);
-	return (NULL);
+void free_double_arr_str(char **str_arr){
+    char **temp;
+
+    temp = str_arr;
+    while(*str_arr){
+        free(*str_arr);
+        *str_arr = NULL;
+        str_arr++;
+    }
+    free(temp);
 }
 
-char	**main_logic(char **str_arr, char *prev_str, char *curr_str, char c,
-		int count)
-{
-	char	**temp;
+char** extract_substrings(char **str_arr, char *old_str, char c){
+    char *new_str;
+    char **temp;
 
-	temp = str_arr;
-	if (str_arr == NULL)
-		return (NULL);
-	while (curr_str != NULL)
-	{
-		*str_arr = ft_substr(prev_str, 0, (ft_strlen(prev_str)
-					- ft_strlen(curr_str)));
-		if (*str_arr == NULL)
-		{
-			return (free_str_arr(str_arr));
-		}
-		curr_str++;
-		prev_str = curr_str;
-		str_arr++;
-		count--;
-		curr_str = ft_strchr(prev_str, c);
-	}
-	*str_arr = ft_substr(prev_str, 0, ft_strlen(prev_str));
-	str_arr++;
-	*str_arr = NULL;
-	return (temp);
+    temp = str_arr;
+    new_str = ft_strchr(old_str, c);
+    while (new_str){
+        *str_arr = ft_substr(old_str, 0, ft_strlen(old_str)-ft_strlen(new_str));
+        if (*str_arr==NULL)
+            return (free_double_arr_str(str_arr), NULL);
+        while(1){
+            if (*new_str==c)
+                new_str++;
+            else
+                break;
+        }
+        old_str = new_str;
+        new_str = ft_strchr(old_str, c);
+        str_arr++;
+    }
+    *str_arr = ft_strdup(old_str);
+    if (*str_arr==NULL)
+        return (free_double_arr_str(str_arr), NULL);
+    return (temp);
 }
-char	**ft_split(char const *s, char c)
-{
-	char	**str_arr;
-	char	*prev_str;
-	char	*curr_str;
-	char	*cleaned_s;
-	int		count;
-	char	**result;
 
-	cleaned_s = clean_and_remove_duplicates(s, c);
-	if (cleaned_s != NULL)
-	{
-		prev_str = cleaned_s;
-		curr_str = ft_strchr(cleaned_s, c);
-		count = get_c_count(cleaned_s, c) + 2;
-		str_arr = (char **)malloc(sizeof(char *) * count);
-		result = main_logic(str_arr, prev_str, curr_str, c, count);
-		if (result == NULL)
-		{
-			free(cleaned_s);
-			free(str_arr);
-			return (NULL);
-		}
-		free(cleaned_s);
-	}
-	else
-	{
-		str_arr = (char **)malloc(sizeof(char *) * 1);
-		*str_arr = NULL;
-	}
-	return (str_arr);
+char	**ft_split(char const *s, char c){
+    char **str_arr;
+    char *old_str;
+    char *char_str;
+    int size;
+
+    if (!s || !*s || c=='\0')
+        return NULL;
+    char_str = delimiter_string(c);
+	if (!char_str)
+		return NULL;
+    old_str = ft_strtrim(s, char_str);
+    free(char_str);
+    if (!old_str)
+        return NULL;
+    size = get_delimiter_count(old_str, c);
+    str_arr = (char**)malloc(sizeof(char*)*(size+1));
+    if (!str_arr)
+        return (free(old_str), NULL);
+    extract_substrings(str_arr, old_str, c);
+    free(old_str);
+    if (!str_arr)
+        return (NULL);
+    return (str_arr[size] = NULL, str_arr);
 }

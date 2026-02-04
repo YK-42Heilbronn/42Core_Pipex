@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 13:44:32 by ykonka            #+#    #+#             */
-/*   Updated: 2026/01/07 16:31:52 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/01/16 18:26:23 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,24 +28,15 @@ char	*get_next_line(int fd)
 	int			bytes_read;
 
 	next_line = NULL;
-	printf(" 1 get next line\n");
 	buffer = initialize_or_join(&rest_of_buffer, &buffer, 1);
-	printf("after join\n");
 	if (!buffer)
 		return (NULL);
 	while (1)
 	{
-		printf("in while begin\n");
-		printf("+++++ %s\n", rest_of_buffer);
-		next_line = ft_strchr(rest_of_buffer, '\n');
-		if (next_line == NULL)
-			printf("gnl strchr NULL\n");
-		printf("gnl strchr: %s\n", next_line);
+		next_line = md_strchr(rest_of_buffer, '\n');
 		if (!next_line)
 		{
-			printf(" getnextline if before read\n");
 			bytes_read = read(fd, buffer, BUFFER_SIZE);
-			printf(" getnextline if after read\n");
 			if (bytes_read >= 0)
 				buffer[bytes_read] = '\0';
 			if (bytes_read <= 0)
@@ -53,11 +44,8 @@ char	*get_next_line(int fd)
 			if (!initialize_or_join(&rest_of_buffer, &buffer, 0))
 				return (NULL);
 		}
-		else{
-			printf("-- else\n");
+		else
 			return (return_line(next_line, &rest_of_buffer, &buffer));
-		}
-			
 	}
 }
 
@@ -68,29 +56,22 @@ static char	*initialize_or_join(char **rest_of_buf_ptr, char **buf_ptr,
 
 	if (initialize)
 	{
-		printf("before mem alloc - %d\n", BUFFER_SIZE);
 		buffer_or_joined = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 		if (!buffer_or_joined || BUFFER_SIZE <= 0)
 		{
-			printf("failed mem alloc - %d\n", BUFFER_SIZE);
 			if (*rest_of_buf_ptr)
 				clean_memory(rest_of_buf_ptr, NULL);
 			return (NULL);
 		}
-		printf("join return 1\n");
 		return (buffer_or_joined);
 	}
 	else
 	{
-		buffer_or_joined = ft_strjoin(*rest_of_buf_ptr, *buf_ptr);
+		buffer_or_joined = md_strjoin(*rest_of_buf_ptr, *buf_ptr);
 		free(*rest_of_buf_ptr);
 		*rest_of_buf_ptr = NULL;
-		if (buffer_or_joined && (*buffer_or_joined != '\0')){
-			printf("join return 2\n");
+		if (buffer_or_joined && (*buffer_or_joined != '\0'))
 			return (*rest_of_buf_ptr = buffer_or_joined, "");
-		}
-			
-		printf("join return 3\n");
 		return (clean_memory(NULL, buf_ptr), NULL);
 	}
 }
@@ -115,16 +96,15 @@ static char	*return_line(char *next_line, char **rest_of_buf_ptr,
 	char		*sub_str;
 	char		*temp;
 	long int	len;
-	printf("entered to return_line\n");
 	len = next_line - *rest_of_buf_ptr + 1;
-	sub_str = ft_substr(*rest_of_buf_ptr, 0, len);
+	sub_str = md_substr(*rest_of_buf_ptr, 0, len);
 	if (!sub_str || sub_str[0] == '\0')
 	{
 		clean_memory(rest_of_buf_ptr, buf_ptr);
 		free(sub_str);
 		return (NULL);
 	}
-	temp = ft_strdup(*rest_of_buf_ptr + len);
+	temp = md_strdup(*rest_of_buf_ptr + len);
 	if (!temp)
 		return (clean_memory(rest_of_buf_ptr, buf_ptr), free(sub_str), NULL);
 	free(*rest_of_buf_ptr);
@@ -149,7 +129,7 @@ static char	*end_of_file(char **rest_of_buf_ptr, char **buf_ptr, int bytes_read)
 	last_line = NULL;
 	if (rest_of_buf_ptr && *rest_of_buf_ptr)
 	{
-		last_line = ft_strdup(*rest_of_buf_ptr);
+		last_line = md_strdup(*rest_of_buf_ptr);
 		clean_memory(rest_of_buf_ptr, buf_ptr);
 		if (!last_line)
 			return (last_line);
