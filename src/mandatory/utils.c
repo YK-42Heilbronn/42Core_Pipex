@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/27 19:42:30 by ykonka            #+#    #+#             */
-/*   Updated: 2026/02/04 12:39:05 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/05 17:12:35 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ void print_errors(char *pre_text, char *msg_or_cmd, int _perror){
 }
 
 // @Child-Process-Method
-int open_file(const char *file, int r_or_w){
+int open_file(const char *file, int write){
     int fd;
 
-    if (r_or_w)  // 1-MAX = read
-        fd = open(file, O_RDONLY);
-    else  // 0 = write
+    if (write)  // 1-MAX = write
         fd = open(file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+    else  // 0 = read
+        fd = open(file, O_RDONLY);
 
     if (fd == -1){  // here errno=is_set_by open() system call function
         print_errors("Pipex: ", (char*)file, 1);
@@ -52,8 +52,18 @@ int is_file_exist(const char *path){
 }
 
 // @Child-Process-Method
-void is_file_valid(const char *in_or_out, int infile){
-    if (infile){  // infile
+void is_file_valid(const char *in_or_out, int outfile){
+    if (outfile){ // outfile
+        if (is_file_exist(in_or_out)){
+            if (access(in_or_out, W_OK) != 0){
+                errno = EACCES;
+                // perror("outfile write_permission");
+                print_errors("Pipex: ", (char*)in_or_out, 1);
+                exit(EX_OTFNW);
+            }
+        } // if it does not exist, will be created and given write access
+        // return (EX_SUCCESS);
+    }else{ // infile
         if (!is_file_exist(in_or_out)){
             errno = ENOENT;
             print_errors("Pipex: ", (char*)in_or_out, 1);
@@ -61,29 +71,42 @@ void is_file_valid(const char *in_or_out, int infile){
         }else{
             if (access(in_or_out, R_OK) != 0){
                 errno = EACCES;
-                print_errors("Pipex: read: ", (char*)in_or_out, 1);
+                print_errors("Pipex: ", (char*)in_or_out, 1);
                 exit(EX_ITFNR);
             }
         }
-    }else{// outfile
-        if (is_file_exist(in_or_out)){
-            if (access(in_or_out, W_OK) != 0){
-                errno = EACCES;
-                // perror("outfile write_permission");
-                print_errors("Pipex: write: ", (char*)in_or_out, 1);
-                exit(EX_OTFNW);
-            }
-        } // if it does not exist, will be created and given write access
-        // return (EX_SUCCESS);
     }
+    // if (infile){  // infile
+    //     // if (!is_file_exist(in_or_out)){
+    //     //     errno = ENOENT;
+    //     //     print_errors("Pipex: ", (char*)in_or_out, 1);
+    //     //     exit(EX_ITFNF);
+    //     // }else{
+    //     //     if (access(in_or_out, R_OK) != 0){
+    //     //         errno = EACCES;
+    //     //         print_errors("Pipex: ", (char*)in_or_out, 1);
+    //     //         exit(EX_ITFNR);
+    //     //     }
+    //     // }
+    // }else{// outfile
+    //     // if (is_file_exist(in_or_out)){
+    //     //     if (access(in_or_out, W_OK) != 0){
+    //     //         errno = EACCES;
+    //     //         // perror("outfile write_permission");
+    //     //         print_errors("Pipex: ", (char*)in_or_out, 1);
+    //     //         exit(EX_OTFNW);
+    //     //     }
+    //     // } // if it does not exist, will be created and given write access
+    //     // // return (EX_SUCCESS);
+    // }
 }
 
 void free_strings_arr(char **str_arr){
     char **temp;
-    
+
     if (str_arr == NULL)
         return;
-    
+
     temp = str_arr;
     while (*temp){
         free(*temp);
