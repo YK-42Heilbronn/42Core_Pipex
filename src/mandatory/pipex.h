@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 10:34:38 by ykonka            #+#    #+#             */
-/*   Updated: 2026/02/05 16:27:41 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/07 14:29:41 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include "errno.h"
 # include "../libs/libft/libft.h"
 
-typedef enum s_exit_codes{
+typedef enum e_exit_codes{
 	EX_SUCCESS = 0,
 	EX_GENFAILURE = -1,
 	EX_APPFAILURE = 1,
@@ -35,6 +35,7 @@ typedef enum s_exit_codes{
 	EX_FILEOPENFAILURE = 9,
 	EX_FDREADFAILURE = 10,
 	EX_FDFAILURE = 11,
+	EX_MEMALLOCFAILURE = 12,
 	EX_CHDPROCFAILURE = 20,
 	EX_FORKFAILURE = 30,
 	EX_PIPEFAILURE = 40,
@@ -43,20 +44,15 @@ typedef enum s_exit_codes{
 }	t_exit_codes;
 
 // pipex.c
-void	pipex(const char *file1, const char *cmd1, \
-const char *cmd2, const char *file2);
-// void	first_child(const char *cmd, const char *file1, int pipefd[]);
-// void	last_child(const char *cmd, const char *file2, int pipefd[]);
-void child_process(const char *cmd, const char *file, int pipefd[], int child);
-pid_t	create_child_process(int pipefd[], const char *cmd);
 
 // get_exe_path.c
 char	*executable_path(char	**cmd_split);
 
 // utils.c
-void	print_errors(char *pre_text, char *msg_or_cmd, int _perror);
+char	*get_env_path(char *env_key);
+void	print_errors_and_exit(char *pre_text, char *msg_or_cmd, \
+	int exitcode, int _perror_errno);
 int		open_file(const char *file, int r_or_w);
-int		is_file_exist(const char *path);
 void	free_strings_arr(char **str_arr);
 void	is_file_valid(const char *in_or_out, int infile);
 

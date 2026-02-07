@@ -6,114 +6,111 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/27 19:42:30 by ykonka            #+#    #+#             */
-/*   Updated: 2026/02/05 17:12:35 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/07 14:29:27 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "pipex.h"
+#include "pipex.h"
 
-void print_errors(char *pre_text, char *msg_or_cmd, int _perror){
-    char *print_str;
+char	*get_env_path(char *env_key)
+{
+	char	**env;
 
-    if (_perror){
-        // errno = EACCES;
-        print_str = ft_strjoin(pre_text, msg_or_cmd);
-        perror(print_str);
-        free(print_str);
-    }else{
-        // pre_text = "Pipex: command not found: ";
-        write(2, pre_text, ft_strlen(pre_text));
-        write(2, msg_or_cmd, ft_strlen(msg_or_cmd));
-        write(2, "\n", 1);
-    }
+	env = __environ;
+	while (*env)
+	{
+		if (ft_strncmp(*env, env_key, ft_strlen(env_key)) == 0)
+			return (ft_strdup(*env + 5));
+		env++;
+	}
+	return (NULL);
+}
+
+/*
+if _perror_errno=SUCCESS(0), we are not interested to print the error message,
+only failure cases are infomed
+if _perror_errno=-1, means invoked internal function has failed and
+set the errno(no manual intervention needed)
+*/
+void	print_errors_and_exit(char *pre_text, char *msg_or_cmd, \
+	int exitcode, int _perror_errno)
+{
+	char	*print_str;
+
+	if (_perror_errno != -1 && _perror_errno != 0)
+		errno = _perror_errno;
+	if (_perror_errno)
+	{
+		print_str = ft_strjoin(pre_text, msg_or_cmd);
+		perror(print_str);
+		free(print_str);
+	}
+	else
+	{
+		write(2, pre_text, ft_strlen(pre_text));
+		write(2, msg_or_cmd, ft_strlen(msg_or_cmd));
+		write(2, "\n", 1);
+	}
+	if (exitcode != 0)
+		exit(exitcode);
 }
 
 // @Child-Process-Method
-int open_file(const char *file, int write){
-    int fd;
+int	open_file(const char *file, int write)
+{
+	int	fd;
 
-    if (write)  // 1-MAX = write
-        fd = open(file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-    else  // 0 = read
-        fd = open(file, O_RDONLY);
-
-    if (fd == -1){  // here errno=is_set_by open() system call function
-        print_errors("Pipex: ", (char*)file, 1);
-        exit (EX_GENFAILURE);
-    }
-    return fd;
-}
-
-int is_file_exist(const char *path){
-    if (access(path, F_OK) == 0){
-        return 1; // exist
-    }
-    return 0; // not exist
+	if (write)
+		fd = open(file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	else
+		fd = open(file, O_RDONLY);
+	if (fd == -1)
+		print_errors_and_exit("Pipex: ", (char *)file, EX_GENFAILURE, -1);
+	return (fd);
 }
 
 // @Child-Process-Method
-void is_file_valid(const char *in_or_out, int outfile){
-    if (outfile){ // outfile
-        if (is_file_exist(in_or_out)){
-            if (access(in_or_out, W_OK) != 0){
-                errno = EACCES;
-                // perror("outfile write_permission");
-                print_errors("Pipex: ", (char*)in_or_out, 1);
-                exit(EX_OTFNW);
-            }
-        } // if it does not exist, will be created and given write access
-        // return (EX_SUCCESS);
-    }else{ // infile
-        if (!is_file_exist(in_or_out)){
-            errno = ENOENT;
-            print_errors("Pipex: ", (char*)in_or_out, 1);
-            exit(EX_ITFNF);
-        }else{
-            if (access(in_or_out, R_OK) != 0){
-                errno = EACCES;
-                print_errors("Pipex: ", (char*)in_or_out, 1);
-                exit(EX_ITFNR);
-            }
-        }
-    }
-    // if (infile){  // infile
-    //     // if (!is_file_exist(in_or_out)){
-    //     //     errno = ENOENT;
-    //     //     print_errors("Pipex: ", (char*)in_or_out, 1);
-    //     //     exit(EX_ITFNF);
-    //     // }else{
-    //     //     if (access(in_or_out, R_OK) != 0){
-    //     //         errno = EACCES;
-    //     //         print_errors("Pipex: ", (char*)in_or_out, 1);
-    //     //         exit(EX_ITFNR);
-    //     //     }
-    //     // }
-    // }else{// outfile
-    //     // if (is_file_exist(in_or_out)){
-    //     //     if (access(in_or_out, W_OK) != 0){
-    //     //         errno = EACCES;
-    //     //         // perror("outfile write_permission");
-    //     //         print_errors("Pipex: ", (char*)in_or_out, 1);
-    //     //         exit(EX_OTFNW);
-    //     //     }
-    //     // } // if it does not exist, will be created and given write access
-    //     // // return (EX_SUCCESS);
-    // }
+void	is_file_valid(const char *in_or_out, int outfile)
+{
+	if (outfile)
+	{
+		if (access(in_or_out, F_OK) == 0)
+		{
+			if (access(in_or_out, W_OK) != 0)
+			{
+				print_errors_and_exit("Pipex: ", (char *)in_or_out, \
+				EX_OTFNW, EACCES);
+			}
+		}
+	}
+	else
+	{
+		if (access(in_or_out, F_OK) != 0)
+			print_errors_and_exit("Pipex: ", (char *)in_or_out, \
+			EX_ITFNF, ENOENT);
+		else
+		{
+			if (access(in_or_out, R_OK) != 0)
+			{
+				print_errors_and_exit("Pipex: ", (char *)in_or_out, \
+				EX_ITFNR, EACCES);
+			}
+		}
+	}
 }
 
-void free_strings_arr(char **str_arr){
-    char **temp;
+void	free_strings_arr(char **str_arr)
+{
+	char	**temp;
 
-    if (str_arr == NULL)
-        return;
-
-    temp = str_arr;
-    while (*temp){
-        free(*temp);
-        *temp = NULL;
-        temp++;
-    }
-    free(str_arr);
-    // str_arr = NULL  // sets only local copy to NULL, so do it after in where this method is invoked
+	if (str_arr == NULL)
+		return ;
+	temp = str_arr;
+	while (*temp)
+	{
+		free(*temp);
+		*temp = NULL;
+		temp++;
+	}
+	free(str_arr);
 }
-
