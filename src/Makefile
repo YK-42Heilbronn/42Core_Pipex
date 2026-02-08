@@ -24,8 +24,8 @@ OBJS = $(addprefix $(OBJS_DIR)/,$(OBJ_FILES))
 # ------- Bonus -------
 BONUS_HEADER_FILES = pipex_bonus.h
 BONUS_HEADER = $(BONUS_DIR)/$(BONUS_HEADER_FILES)
-BONUS_SRC_FILES = utils_bonus.c file_utils_bonus.c get_exe_path_bonus.c \
-				  child_processes_bonus.c pipex_bonus.c
+BONUS_SRC_FILES = utils_bonus.c get_exe_path_bonus.c child_processes_bonus.c \
+					pipex_bonus_utils_bonus.c pipex_bonus.c
 BONUS_SRCS = $(addprefix $(BONUS_DIR)/,$(BONUS_SRC_FILES))
 BONUS_OBJ_FILES = $(BONUS_SRCS:.c=.o)
 BONUS_OBJS = $(addprefix $(OBJS_DIR)/,$(BONUS_OBJ_FILES))
