@@ -6,12 +6,11 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 09:31:52 by ykonka            #+#    #+#             */
-/*   Updated: 2026/01/25 11:27:56 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/09 13:30:10 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-# include "stdio.h"
 
 char	*ft_strtrim(char const *s1, char const *set)
 {

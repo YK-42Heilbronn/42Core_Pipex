@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 09:21:21 by ykonka            #+#    #+#             */
-/*   Updated: 2026/02/07 13:49:02 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/09 13:32:10 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	char	*concat_str;
 	char	*temp;
 
-	if (s1==NULL && s2==NULL)
-		return NULL;
-	concat_str = (char *)malloc(sizeof(char) *
+	if (s1 == NULL && s2 == NULL)
+		return (NULL);
+	concat_str = (char *)malloc(sizeof(char) * \
 	(ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (concat_str == NULL)
 		return (NULL);

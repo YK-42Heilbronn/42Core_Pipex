@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 17:14:10 by ykonka            #+#    #+#             */
-/*   Updated: 2026/01/24 10:30:07 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/09 13:31:05 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*ft_strdup(const char *s1)
 	char	*tmp;
 
 	if (!*s1)
-		return NULL;
+		return (NULL);
 	s1_cpy = malloc(sizeof(char) * (ft_strlen(s1) + 1));
 	tmp = s1_cpy;
 	if (s1_cpy != NULL)

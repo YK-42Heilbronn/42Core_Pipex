@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 17:43:05 by ykonka            #+#    #+#             */
-/*   Updated: 2026/02/08 16:37:01 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/09 13:10:31 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,12 @@ int	main(int argc, char *argv[])
 				print_errors_and_exit("Pipex: Usage: ", \
 				"here_doc LIMITER \"cmd1 -flag*\" \"cmd2 -flag*\" ..\
 				. \"cmd(n) -flag*\" outfile", EX_WARGS, 0);
-			initialize_pipex_params(&pipex_parms, NULL, 3, argc-2);
+			initialize_pipex_params(&pipex_parms, NULL, 3, argc - 2);
 			pipex_bonus(argc, argv, &pipex_parms, heredoc_edge_children_procs);
 		}
 		else
 		{
-			initialize_pipex_params(&pipex_parms, NULL, 2, argc-2);
+			initialize_pipex_params(&pipex_parms, NULL, 2, argc - 2);
 			pipex_bonus(argc, argv, &pipex_parms, edge_children_procs);
 		}
 	}
@@ -67,80 +67,32 @@ int	main(int argc, char *argv[])
 static void	pipex_bonus(int argc, char *argv[], t_pipex_params *p_prms, \
 	void (*edge_child_processes)(char *, int[], char *, int))
 {
-	int write_pipe;
-
 	while (p_prms->ind <= p_prms->cmd_end)
 	{
-		write_pipe = (p_prms->ind + 1) % 2;
-		if (p_prms->ind < p_prms->cmd_end && \
-			pipe(p_prms->pipefd[write_pipe]) == -1)
-			print_errors_and_exit("Pipex_Bonus: ", "", EX_PIPEFAILURE, 1);
-		p_prms->child = create_child_process(p_prms->pipefd[write_pipe], argv[p_prms->ind]);
+		create_pipe(p_prms);
+		p_prms->child = create_child_process(p_prms->pipefd[\
+			p_prms->write_pipe], argv[p_prms->ind]);
 		ft_lstadd_back(&(p_prms->children), \
 		ft_lstnew((void *)(intptr_t)p_prms->child));
 		if (p_prms->child == 0)
 		{
 			ft_lstclear(&(p_prms->children), child_del);
 			if (p_prms->ind == p_prms->cmd_start)
-				edge_child_processes(\
-					argv[p_prms->cmd_start - 1], \
-					p_prms->pipefd[write_pipe], \
-					argv[p_prms->ind], \
-					0);
-			else if (p_prms->ind > p_prms->cmd_start && p_prms->ind < p_prms->cmd_end)
-				chained_children_procs(\
-					p_prms->pipefd[!write_pipe], \
-					p_prms->pipefd[write_pipe], \
-					argv[p_prms->ind]);
+				edge_child_processes(argv[p_prms->cmd_start - 1], \
+					p_prms->pipefd[p_prms->write_pipe], argv[p_prms->ind], 0);
+			else if (p_prms->ind > p_prms->cmd_start && \
+					p_prms->ind < p_prms->cmd_end)
+				chained_children_procs(p_prms->pipefd[!p_prms->write_pipe], \
+					p_prms->pipefd[p_prms->write_pipe], argv[p_prms->ind]);
 			else if (p_prms->ind == p_prms->cmd_end)
-				edge_child_processes(\
-					argv[argc - 1], \
-					p_prms->pipefd[!write_pipe], \
-					argv[p_prms->ind], \
-					1);
+				edge_child_processes(argv[argc - 1], \
+					p_prms->pipefd[!p_prms->write_pipe], argv[p_prms->ind], 1);
 		}
-		close_parent_pipefds(p_prms, write_pipe);
+		close_parent_pipefds(p_prms);
 		p_prms->ind++;
 	}
 	exit_parent_process(&(p_prms->children));
 }
-
-// static void	pipex_bonus(int argc, char *argv[], t_pipex_params *p_prms, \
-// 	void (*edge_child_processes)(char *, int[], char *, int))
-// {
-// 	int	pipefd[argc - (p_prms->cmd_start + 2)][2];
-// 	int write_pipe;
-
-// 	while (p_prms->ind <= p_prms->cmd_end)
-// 	{
-// 		if (p_prms->ind < p_prms->cmd_end && \
-// 			pipe(pipefd[p_prms->ind - p_prms->cmd_start]) == -1)
-// 			print_errors_and_exit("Pipex_Bonus: ", "", EX_PIPEFAILURE, 1);
-// 		p_prms->child = create_child_process(pipefd[p_prms->ind - \
-// 									p_prms->cmd_start], argv[p_prms->ind]);
-// 		ft_lstadd_back(&(p_prms->children), \
-// 		ft_lstnew((void *)(intptr_t)p_prms->child));
-// 		if (p_prms->child == 0)
-// 		{
-// 			ft_lstclear(&(p_prms->children), child_del);
-// 			if (p_prms->ind == p_prms->cmd_start)
-// 				edge_child_processes(argv[p_prms->cmd_start - 1], \
-// 				pipefd[p_prms->ind - p_prms->cmd_start], argv[p_prms->ind], 0);
-// 			else if (p_prms->ind > p_prms->cmd_start && p_prms->ind < p_prms->cmd_end)
-// 				chained_children_procs(\
-// 					pipefd[p_prms->ind - (p_prms->cmd_start + 1)], \
-// 					pipefd[p_prms->ind - p_prms->cmd_start], \
-// 					argv[p_prms->ind]);
-// 			else if (p_prms->ind == p_prms->cmd_end)
-// 				edge_child_processes(argv[argc - 1], \
-// 					pipefd[p_prms->ind - (p_prms->cmd_start + 1)], \
-// 					argv[p_prms->ind], 1);
-// 		}
-// 		unload_not_used_fds(p_prms, pipefd);
-// 		p_prms->ind++;
-// 	}
-// 	exit_parent_process(&(p_prms->children));
-// }
 
 static void	exit_parent_process(t_list **children)
 {

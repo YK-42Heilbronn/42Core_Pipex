@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 08:57:03 by ykonka            #+#    #+#             */
-/*   Updated: 2026/01/24 13:31:48 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/09 13:29:47 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 
 	if (!s)
 		return (NULL);
-
 	if (len > ft_strlen(s) - start)
 		len = ft_strlen(s) - start;
 	ind = 0;

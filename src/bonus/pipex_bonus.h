@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 17:43:16 by ykonka            #+#    #+#             */
-/*   Updated: 2026/02/08 16:38:48 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/08 16:56:40 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_pipex_params{
 	int		cmd_start;
 	int		cmd_end;
 	int		pipefd[2][2];
+	int		write_pipe;
 	pid_t	child;
 	t_list	*children;
 }	t_pipex_params;
@@ -60,7 +61,8 @@ void	child_del(void *content);
 void	initialize_pipex_params(t_pipex_params *p_prms, void *children, \
 		int cmd_start, int cmd_end);
 pid_t	create_child_process(int pipefd[], const char *cmd);
-void	close_parent_pipefds(t_pipex_params *p_prms, int write_pipe);
+void	create_pipe(t_pipex_params *p_prms);
+void	close_parent_pipefds(t_pipex_params *p_prms);
 
 // child_processes_bonus.c
 void	chained_children_procs(int read_end_pipefd[], int write_end_pipefd[], \

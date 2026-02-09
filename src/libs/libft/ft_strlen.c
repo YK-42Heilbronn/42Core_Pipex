@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 09:24:31 by ykonka            #+#    #+#             */
-/*   Updated: 2026/01/24 13:39:29 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/09 13:30:44 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,10 @@ size_t	ft_strlen(const char *s)
 	size_t	len;
 
 	len = 0;
-	if (s){
+	if (s)
+	{
 		while (s[len] != '\0')
-		{
 			len++;
-		}
 	}
 	return (len);
 }

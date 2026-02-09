@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 13:44:32 by ykonka            #+#    #+#             */
-/*   Updated: 2026/01/16 18:26:23 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/09 13:33:56 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ static char	*return_line(char *next_line, char **rest_of_buf_ptr,
 	char		*sub_str;
 	char		*temp;
 	long int	len;
+
 	len = next_line - *rest_of_buf_ptr + 1;
 	sub_str = md_substr(*rest_of_buf_ptr, 0, len);
 	if (!sub_str || sub_str[0] == '\0')

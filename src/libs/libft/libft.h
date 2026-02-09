@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 08:50:10 by ykonka            #+#    #+#             */
-/*   Updated: 2026/01/06 13:13:17 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/09 13:27:27 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,12 @@ size_t	ft_strlcat(char *dest, const char *src, size_t size);
 // ----------------------- Bonus -----------------------
 typedef struct s_list
 {
-	void	*content;
-	struct	s_list	*next;
-} t_list;
+	void			*content;
+	struct s_list	*next;
+}	t_list;
 t_list	*ft_lstnew(void *content);
-void ft_lstadd_front(t_list **lst, t_list *new);
-int	ft_lstsize(t_list *lst);
+void	ft_lstadd_front(t_list **lst, t_list *new);
+int		ft_lstsize(t_list *lst);
 t_list	*ft_lstlast(t_list *lst);
 void	ft_lstadd_back(t_list **lst, t_list *new);
 void	ft_lstdelone(t_list *lst, void (*del)(void *));
