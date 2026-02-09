@@ -1,9 +1,8 @@
-# NAME = pipex.a
-# NAME = pipex_asan.out
 NAME = pipex
 BONUS_NAME = pipex_bonus
 
-CFLAGS = -Wall -Wextra -Werror -g
+CC = cc
+CFLAGS = -Wall -Wextra -Werror
 # CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g
 
 MANDATORY_DIR = mandatory
@@ -37,9 +36,6 @@ LIBFT = $(LIBFT_DIR)/libft.a
 GETNEXTLINE_DIR = $(LIBS_DIR)/getnextline
 GETNEXTLINE = $(GETNEXTLINE_DIR)/get_next_line.a
 
-# PRINTF_DIR = $(LIBS_DIR)/printf
-# PRINTF = $(PRINTF_DIR)/libftprintf.a
-
 # --------- Functions -----------
 # ===Colors===
 PURPLE	= \033[95m
@@ -59,37 +55,25 @@ endef
 # --------- Rules ---------
 all: $(NAME)
 
-$(SRC_OBJS_DIR)/%.o: $(MANDATORY_DIR)/%.c  $(SRC_HEADER)# .o files compilation happens in this rule
-# 	$(call print_green,Compiling Mandatory Objects ...)
+# .o files compilation happens in this rule
+$(SRC_OBJS_DIR)/%.o: $(MANDATORY_DIR)/%.c  $(SRC_HEADER)
 	@mkdir -p $(@D)
-	@cc $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT):
 	$(call print_green,Compiling Libft ...)
 	@make -C $(LIBFT_DIR) bonus
 
-# $(PRINTF):
-# 	@make -C $(PRINTF_DIR)
-
 $(NAME): $(OBJS) $(LIBFT)
-# 	LINK: 1
-#   NOTE: following command is used to run the specific script
 	$(call print_green,Compiling Mandatory ...)
-	@cc $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) 
-
-# $(NAME): $(OBJS) $(LIBFT) $(PRINTF)
-# #   NOTE: following commands used to create the static lib of the specific project
-# # 	@cp $(LIBFT) $(NAME)
-# # 	@cp $(PRINTF) $(NAME)
-# 	ar rcs $(NAME) $(LIBFT) $(PRINTF) $(OBJS)    
-# 	ranlib $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
 
 bonus: $(BONUS_NAME)
 
-$(BONUS_OBJS_DIR)/%.o: $(BONUS_DIR)/%.c  $(BONUS_HEADER)# .o files compilation happens in this rule
-# 	$(call print_green,Compiling Bonus Objects ...)
+# .o files compilation happens in this rule
+$(BONUS_OBJS_DIR)/%.o: $(BONUS_DIR)/%.c  $(BONUS_HEADER)
 	@mkdir -p $(@D)
-	@cc $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(GETNEXTLINE):
 	$(call print_green,Compiling GetNextLine ...)
@@ -97,7 +81,7 @@ $(GETNEXTLINE):
 
 $(BONUS_NAME): $(BONUS_OBJS) $(LIBFT) $(GETNEXTLINE)
 	$(call print_green,Compiling Bonus ...)
-	@cc $(CFLAGS) $(BONUS_OBJS) $(LIBFT) $(GETNEXTLINE) -o $(BONUS_NAME)
+	@$(CC) $(CFLAGS) $(BONUS_OBJS) $(LIBFT) $(GETNEXTLINE) -o $(BONUS_NAME)
 
 # -------- Phonies --------
 clean:
@@ -105,7 +89,6 @@ clean:
 	@rm -rf $(OBJS_DIR)
 	@make -C $(LIBFT_DIR) clean
 	@make -C $(GETNEXTLINE_DIR) clean
-# 	@make -C $(PRINTF_DIR) clean
 
 fclean: clean
 	$(call print_red,Cleaning Objects & Executables ...)
@@ -113,19 +96,7 @@ fclean: clean
 	@rm -f $(BONUS_NAME)
 	@make -C $(LIBFT_DIR) fclean
 	@make -C $(GETNEXTLINE_DIR) fclean
-# 	@make -C $(PRINTF_DIR) fclean
 
 re: fclean all
 
 .PHONY: all clean fclean re bonus
-
-run:
-	@chmod 755 $(NAME)
-	@./pipex.out file1.txt "ls -la" "wc -w" file2.txt
-	@cat file2.txt
-
-
-TEXT_FILES = file1.txt file2.txt outfile infile
-clean_text_files:
-	@rm -f $(TEXT_FILES)
-	
