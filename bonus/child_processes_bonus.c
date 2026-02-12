@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 19:08:17 by ykonka            #+#    #+#             */
-/*   Updated: 2026/02/08 16:13:25 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/12 16:25:10 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ void	edge_children_procs(char *f_path, int pipefd[], char *cmd, int edge)
 	char	**cmd_split;
 	char	*exe_path;
 
+	is_file_valid(f_path, edge);
 	cmd_split = ft_split(cmd, ' ');
 	if (cmd_split == NULL)
 		print_errors_and_exit("Pipex_Bonus: ", "", EX_CHDPROCFAILURE, 0);

@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 17:43:16 by ykonka            #+#    #+#             */
-/*   Updated: 2026/02/08 16:56:40 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/12 16:16:46 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ char	*executable_path(char **cmd);
 // utils_bonus.c
 char	*get_env_path(char *env_key);
 int		open_file(const char *file, char mode);
-void	is_file_valid(const char *in_or_out, int infile);
+void	is_file_valid(const char *in_or_out, int outfile);
 void	print_errors_and_exit(char *pre_text, char *msg_or_cmd, \
 		int exitcode, int _perror_errno);
 void	free_strings_arr(char **str_arr);
