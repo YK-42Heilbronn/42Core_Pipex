@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 17:43:05 by ykonka            #+#    #+#             */
-/*   Updated: 2026/02/09 13:10:31 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/12 14:36:13 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static	void	pipex_bonus(int argc, char *argv[], t_pipex_params *p_prms, \
 	void (*edge_child_processes)(char *, int[], char *, int));
 static	void	exit_parent_process(t_list **children);
+static	void	validate_args(int argc, char *argv[]);
 
 // ./pipex file1 cmd1 cmd2 file2
 /*
@@ -40,28 +41,43 @@ int	main(int argc, char *argv[])
 	char			*hd;
 	t_pipex_params	pipex_parms;
 
-	if (argc < 5)
-		print_errors_and_exit("Pipex: Usage: ", "infile \"cmd1\"...\"cmdn*\" \
-			outfile", EX_WARGS, 0);
+	hd = "here_doc";
+	validate_args(argc, argv);
+	if (ft_strncmp(argv[1], hd, ft_strlen(hd)) == 0)
+	{
+		initialize_pipex_params(&pipex_parms, NULL, 3, argc - 2);
+		pipex_bonus(argc, argv, &pipex_parms, heredoc_edge_children_procs);
+	}
 	else
+	{
+		initialize_pipex_params(&pipex_parms, NULL, 2, argc - 2);
+		pipex_bonus(argc, argv, &pipex_parms, edge_children_procs);
+	}
+	return (EX_SUCCESS);
+}
+
+static void	validate_args(int argc, char *argv[])
+{
+	char	*usage;
+	char	*hd;
+
+	if (argc < 6)
 	{
 		hd = "here_doc";
 		if (ft_strncmp(argv[1], hd, ft_strlen(hd)) == 0)
 		{
-			if (argc < 6)
-				print_errors_and_exit("Pipex: Usage: ", \
-				"here_doc LIMITER \"cmd1 -flag*\" \"cmd2 -flag*\" ..\
-				. \"cmd(n) -flag*\" outfile", EX_WARGS, 0);
-			initialize_pipex_params(&pipex_parms, NULL, 3, argc - 2);
-			pipex_bonus(argc, argv, &pipex_parms, heredoc_edge_children_procs);
+			usage = "here_doc LIMITER infile \"cmd1\" ... \"cmd(n*)\" outfile";
+			print_errors_and_exit("Pipex: Usage: ", usage, EX_WARGS, 0);
 		}
 		else
 		{
-			initialize_pipex_params(&pipex_parms, NULL, 2, argc - 2);
-			pipex_bonus(argc, argv, &pipex_parms, edge_children_procs);
+			if (argc < 5)
+			{
+				usage = "infile \"cmd1\" ... \"cmd(n*)\" outfile";
+				print_errors_and_exit("Pipex: Usage: ", usage, EX_WARGS, 0);
+			}
 		}
 	}
-	return (EX_SUCCESS);
 }
 
 static void	pipex_bonus(int argc, char *argv[], t_pipex_params *p_prms, \

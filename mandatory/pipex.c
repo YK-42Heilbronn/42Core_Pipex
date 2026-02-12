@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 14:49:16 by ykonka            #+#    #+#             */
-/*   Updated: 2026/02/07 14:28:13 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/12 14:05:20 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,12 @@ static void		child_process(const char *cmd, const char *file, \
 
 int	main(int argc, char *argv[])
 {
+	char	*usage;
+
+	usage = "infile \"cmd1\" \"cmd2\" outfile";
 	if (argc != 5)
 	{
-		print_errors_and_exit("Pipex: Usage: ", "infile \"cmd1 -flag1 -flag2\" \
-			\"cmd2 -flag1 -flag2\" outfile", EX_WARGS, 0);
+		print_errors_and_exit("Pipex: Usage: ", usage, EX_WARGS, 0);
 	}
 	else
 	{
