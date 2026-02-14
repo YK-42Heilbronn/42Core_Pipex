@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/27 19:42:30 by ykonka            #+#    #+#             */
-/*   Updated: 2026/02/07 14:29:27 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/14 12:21:29 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,35 +69,36 @@ int	open_file(const char *file, int write)
 	return (fd);
 }
 
-// @Child-Process-Method
-void	is_file_valid(const char *in_or_out, int outfile)
-{
-	if (outfile)
-	{
-		if (access(in_or_out, F_OK) == 0)
-		{
-			if (access(in_or_out, W_OK) != 0)
-			{
-				print_errors_and_exit("Pipex: ", (char *)in_or_out, \
-				EX_OTFNW, EACCES);
-			}
-		}
-	}
-	else
-	{
-		if (access(in_or_out, F_OK) != 0)
-			print_errors_and_exit("Pipex: ", (char *)in_or_out, \
-			EX_ITFNF, ENOENT);
-		else
-		{
-			if (access(in_or_out, R_OK) != 0)
-			{
-				print_errors_and_exit("Pipex: ", (char *)in_or_out, \
-				EX_ITFNR, EACCES);
-			}
-		}
-	}
-}
+// // @Child-Process-Method
+// // no need of this function, because open() system call will handle all failure cases including file permission, file not exist
+// void	is_file_valid(const char *in_or_out, int outfile)
+// {
+// 	if (outfile)
+// 	{
+// 		if (access(in_or_out, F_OK) == 0)
+// 		{
+// 			if (access(in_or_out, W_OK) != 0)
+// 			{
+// 				print_errors_and_exit("Pipex: ", (char *)in_or_out, \
+// 				EX_OTFNW, EACCES);
+// 			}
+// 		}
+// 	}
+// 	else
+// 	{
+// 		if (access(in_or_out, F_OK) != 0)
+// 			print_errors_and_exit("Pipex: ", (char *)in_or_out, \
+// 			EX_ITFNF, ENOENT);
+// 		else
+// 		{
+// 			if (access(in_or_out, R_OK) != 0)
+// 			{
+// 				print_errors_and_exit("Pipex: ", (char *)in_or_out, \
+// 				EX_ITFNR, EACCES);
+// 			}
+// 		}
+// 	}
+// }
 
 void	free_strings_arr(char **str_arr)
 {

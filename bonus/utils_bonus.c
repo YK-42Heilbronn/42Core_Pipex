@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/27 19:42:30 by ykonka            #+#    #+#             */
-/*   Updated: 2026/02/12 16:20:46 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/14 12:19:33 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	*get_env_path(char *env_key)
 int	open_file(const char *file, char mode)
 {
 	int	fd;
-
+	printf("i am from open file\n");
 	fd = -1;
 	if (mode == 'r')
 		fd = open(file, O_RDONLY);
@@ -38,39 +38,41 @@ int	open_file(const char *file, char mode)
 	else if (mode == 'a')
 		fd = open(file, O_CREAT | O_APPEND | O_WRONLY, 0644);
 	if (fd == -1)
-		print_errors_and_exit("Pipex_Bonus: ", (char *)file, EX_GENFAILURE, 1);
+		print_errors_and_exit("Pipex_Bonus: ", (char *)file, EX_GENFAILURE, -1);
 	return (fd);
 }
 
-// @Child-Process-Method
-void	is_file_valid(const char *in_or_out, int outfile)
-{
-	if (outfile)
-	{
-		if (access(in_or_out, F_OK) == 0)
-		{
-			if (access(in_or_out, W_OK) != 0)
-			{
-				print_errors_and_exit("Pipex: ", (char *)in_or_out, \
-				EX_OTFNW, EACCES);
-			}
-		}
-	}
-	else
-	{
-		if (access(in_or_out, F_OK) != 0)
-			print_errors_and_exit("Pipex: ", (char *)in_or_out, \
-			EX_ITFNF, ENOENT);
-		else
-		{
-			if (access(in_or_out, R_OK) != 0)
-			{
-				print_errors_and_exit("Pipex: ", (char *)in_or_out, \
-				EX_ITFNR, EACCES);
-			}
-		}
-	}
-}
+// // @Child-Process-Method
+// // no need of this function, because open() system call handles all cases including, file permission, not exist
+// void	is_file_valid(const char *in_or_out, int outfile)
+// {
+// 	if (outfile)
+// 	{
+// 		if (access(in_or_out, F_OK) == 0)
+// 		{
+// 			if (access(in_or_out, W_OK) != 0)
+// 			{
+// 				print_errors_and_exit("Pipex: ", (char *)in_or_out, \
+// 				EX_OTFNW, EACCES);
+// 			}
+// 		}
+// 	}
+// 	else
+// 	{
+// 		if (access(in_or_out, F_OK) != 0)
+// 			print_errors_and_exit("Pipex: ", (char *)in_or_out, \
+// 			EX_ITFNF, ENOENT);
+// 		else
+// 		{
+// 			if (access(in_or_out, R_OK) != 0)
+// 			{
+// 				printf("i am from validation\n");
+// 				print_errors_and_exit("Pipex: ", (char *)in_or_out, \
+// 				EX_ITFNR, EACCES);
+// 			}
+// 		}
+// 	}
+// }
 
 void	print_errors_and_exit(char *pre_text, char *msg_or_cmd, \
 	int exitcode, int _perror_errno)
