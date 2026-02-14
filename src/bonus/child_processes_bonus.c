@@ -6,34 +6,48 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 19:08:17 by ykonka            #+#    #+#             */
-/*   Updated: 2026/02/08 16:13:25 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/14 11:46:05 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
+/*
+solution-1
+----------
+limiter = ft_strjoin(limiter, "\n");
+if ((ft_strlen(limiter) == ft_strlen(line)) &&
+	(ft_strncmp(line, limiter, ft_strlen(limiter)) == 0))
+
+solution-2
+----------
+if ((line[ft_strlen(line)]=='\n') &&
+	(ft_strncmp(line, limiter, ft_strlen(limiter)) == 0))
+
+however, solution-2 is more reliable and easy.   [OK]
+solution-1, needs additional care like 1. creating str 2. free it after usage   [KO]
+*/
 static int	here_doc_input(char *limiter)
 {
 	int		fd1;
 	int		fd2;
 	char	*line;
-	char	*hd;
 
 	fd1 = open_file("/tmp/pipex_bonus_heredoc", 'w');
 	fd2 = open_file("/tmp/pipex_bonus_heredoc", 'r');
-	hd = "> ";
 	unlink("/tmp/pipex_bonus");
-	write(STDOUT_FILENO, hd, ft_strlen(hd));
+	write(STDOUT_FILENO, "> ", ft_strlen("> "));
 	line = get_next_line(STDIN_FILENO);
 	while (line)
 	{
-		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
+		if ((line[ft_strlen(limiter)]=='\n') &&
+		(ft_strncmp(line, limiter, ft_strlen(limiter)) == 0))
 		{
 			free(line);
 			break ;
 		}
 		write(fd1, line, ft_strlen(line));
-		write(STDOUT_FILENO, hd, ft_strlen(hd));
+		write(STDOUT_FILENO, "> ", ft_strlen("> "));
 		free(line);
 		line = get_next_line(STDIN_FILENO);
 	}

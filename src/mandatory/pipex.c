@@ -6,7 +6,7 @@
 /*   By: ykonka <ykonka@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 14:49:16 by ykonka            #+#    #+#             */
-/*   Updated: 2026/02/07 14:28:13 by ykonka           ###   ########.fr       */
+/*   Updated: 2026/02/14 11:58:10 by ykonka           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ static void	child_process(const char *cmd, const char *file, \
 	char	*exe_path;
 	int		f_fd;
 
-	is_file_valid(file, child);
+	// is_file_valid(file, child);
 	f_fd = open_file(file, child);
 	cmd_split = ft_split(cmd, ' ');
 	if (cmd_split == NULL)
