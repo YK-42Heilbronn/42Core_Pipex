@@ -4,3 +4,4 @@ excludes/*
 src/*
 tests/*
 config.sh
+src/tests_pipex
