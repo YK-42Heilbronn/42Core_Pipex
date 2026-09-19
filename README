@@ -54,3 +54,4 @@ $ ./pipex here_doc EOF cat cat outfile
 - `man bash`: To get to know what shell program is?, how redirection, arguments parsing done in bash
 
 - `man pipe`, `man wait`, `man fork`, `man execve` `man dup2`, `man access`, `man exit`: To understand what each of these functions do and how they are helpful in the pipex implmentation.
+- ai is used for testcases and refractorization
